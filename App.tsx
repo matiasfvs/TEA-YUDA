@@ -1,21 +1,19 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import SplashScreen from './src/screens/splashScreen';
 import { useEffect, useState } from 'react';
 import HomeScreen from './src/screens/homeScreen';
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
 
-  const[isLoading,setIsLoading] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 4000);
 
-  useEffect(()=>{
-
-    const timer = setTimeout(()=>{
-      setIsLoading(false)
-    },4000)
-
-    return()=>clearTimeout(timer)
-  })
+    return () => clearTimeout(timer);
+  }, []);
 
   if (isLoading) {
     return <SplashScreen />;
@@ -23,7 +21,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <HomeScreen/>
+      <HomeScreen />
       <StatusBar style="auto" />
     </View>
   );
@@ -32,6 +30,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#9bd3ae',
   },
 });

@@ -1,10 +1,11 @@
 import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
-import { View, TouchableOpacity, StyleSheet, Image, Alert, Text, ScrollView } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Image, Alert, Text, ScrollView, ActivityIndicator } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import * as Speech from 'expo-speech';
 
 const ButtonAction = forwardRef((props, ref) => {
   const [photos, setPhotos] = useState<string[]>([]);
+  const [deleting, setDeleting] = useState<boolean>(false);
 
   // Función para cargar las fotos del directorio local
   const loadPhotos = async () => {
@@ -33,7 +34,6 @@ const ButtonAction = forwardRef((props, ref) => {
     Speech.speak(textToSpeak);
   };
 
-  // Función para eliminar una imagen
   const handleDelete = (fileUri: string) => {
     Alert.alert(
       'Confirmar eliminación',
@@ -47,12 +47,17 @@ const ButtonAction = forwardRef((props, ref) => {
           text: 'Eliminar',
           onPress: async () => {
             try {
+              // Mostrar indicador de carga
+              setDeleting(true);
               await FileSystem.deleteAsync(fileUri);
               loadPhotos(); // Volver a cargar las fotos después de eliminar
               Alert.alert('Imagen eliminada');
             } catch (error) {
               console.error('Error al eliminar la imagen:', error);
               Alert.alert('Error', 'No se pudo eliminar la imagen');
+            } finally {
+              // Ocultar indicador de carga
+              setDeleting(false);
             }
           },
         },
@@ -76,8 +81,9 @@ const ButtonAction = forwardRef((props, ref) => {
       <View style={styles.separator} />
 
       {/* ScrollView para las imágenes */}
-      <ScrollView style={styles.scrollContainer}>
+      <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent}>
         <View style={styles.flexContainer}>
+          {deleting && <ActivityIndicator size="large" color="#0000ff" />}
           {photos.map((photoName, index) => {
             const fileUri = `${FileSystem.documentDirectory}${photoName}`;
 
@@ -108,6 +114,14 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingHorizontal: 20,
     width: '100%',
+    backgroundColor: '#6a92c3', // Fondo verde oscuro
+  },
+  scrollContainer: {
+    flex: 1,
+    backgroundColor: 'transparent', // Aseguramos que no sobrescriba el fondo
+  },
+  scrollContent: {
+    paddingBottom: 20, // Para añadir espacio al final si es necesario
   },
   flexContainer: {
     flexDirection: 'row',
@@ -118,12 +132,13 @@ const styles = StyleSheet.create({
   button: {
     width: 90,
     height: 90,
-    backgroundColor: '#f9d6bf',
+    borderColor: '#d3ca9b',
     margin: 5,
     borderRadius: 10,
     overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 5,
   },
   image: {
     width: '100%',
@@ -132,13 +147,13 @@ const styles = StyleSheet.create({
   separator: {
     width: '100%',
     height: 1,
-    backgroundColor: '#ccc',
+    backgroundColor: '#4f6d92',
     marginVertical: 20,
   },
   extraButton: {
-    width: 90,  // Botón cuadrado (mismo ancho y alto)
+    width: 150, // Botón cuadrado (mismo ancho y alto)
     height: 90, // Altura igual que el ancho para que sea cuadrado
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#d884f4',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
@@ -149,8 +164,5 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  scrollContainer: {
-    flex: 1, // Para ocupar el resto del espacio disponible
   },
 });
