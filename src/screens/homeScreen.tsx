@@ -38,13 +38,13 @@ const HomeScreen: React.FC = () => {
             tabBarActiveTintColor: 'tomato',
             tabBarInactiveTintColor: 'gray',
             headerStyle: {
-              backgroundColor: '#2ab49', // Fondo verde en la cabecera
+              backgroundColor: '#6a92c3', // Fondo verde en la cabecera
             },
             headerTintColor: '#fff', // Color del texto en la cabecera
           })}
         >
           <Tab.Screen name="Galeria" component={() => <ButtonAction ref={buttonActionRef} />} />
-          <Tab.Screen name="Guardar" component={() => <SaveImage onNewImageSaved={handleNewImageSaved} />} />
+          <Tab.Screen name="Crear Boton" component={() => <SaveImage onNewImageSaved={handleNewImageSaved} />} />
 
         </Tab.Navigator>
   
@@ -56,7 +56,7 @@ const HomeScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#2ab49', // Fondo verde oscuro
+    backgroundColor: '#6a92c3', // Fondo verde oscuro
   },
 });
 

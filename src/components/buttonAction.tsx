@@ -2,6 +2,7 @@ import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'rea
 import { View, TouchableOpacity, StyleSheet, Image, Alert, Text, ScrollView, ActivityIndicator } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import * as Speech from 'expo-speech';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 const ButtonAction = forwardRef((props, ref) => {
   const [photos, setPhotos] = useState<string[]>([]);
@@ -74,7 +75,7 @@ const ButtonAction = forwardRef((props, ref) => {
     <View style={styles.container}>
       {/* Botón adicional que dice "Yo quiero" */}
       <TouchableOpacity style={styles.extraButton} onPress={handleYoQuiero}>
-        <Text style={styles.buttonText}>Yo quiero</Text>
+        <Text style={styles.buttonText}>Yo quiero </Text><FontAwesome name="child" size={25} color="white" />
       </TouchableOpacity>
 
       {/* Línea divisoria */}
@@ -88,6 +89,7 @@ const ButtonAction = forwardRef((props, ref) => {
             const fileUri = `${FileSystem.documentDirectory}${photoName}`;
 
             return (
+              <View>
               <TouchableOpacity
                 key={index}
                 style={styles.button}
@@ -97,6 +99,8 @@ const ButtonAction = forwardRef((props, ref) => {
               >
                 <Image source={{ uri: fileUri }} style={styles.image} resizeMode="cover" />
               </TouchableOpacity>
+              <Text style={styles.photoName}>{photoName.replace(/\.(jpg|png)$/, '')}</Text>
+              </View>
             );
           })}
         </View>
@@ -151,7 +155,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   extraButton: {
-    width: 150, // Botón cuadrado (mismo ancho y alto)
+    width: 200, // Botón cuadrado (mismo ancho y alto)
     height: 90, // Altura igual que el ancho para que sea cuadrado
     backgroundColor: '#d884f4',
     justifyContent: 'center',
@@ -165,4 +169,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  photoName:{
+    color: '#fff',
+    fontSize: 10,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  }
 });
